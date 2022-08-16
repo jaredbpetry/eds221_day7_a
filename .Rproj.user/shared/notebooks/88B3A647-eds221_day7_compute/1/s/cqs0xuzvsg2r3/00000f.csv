@@ -1,0 +1,2 @@
+"0","firewalkers <- starwars |> "
+"0","  mutate(name_2 = str_replace(name, pattern = ""Sky"", replacement = ""Fire""))"

@@ -1,0 +1,3 @@
+"0","starwars_lc <- starwars |> "
+"0","  mutate(name_lower = str_to_lower(name))"
+"0","  "

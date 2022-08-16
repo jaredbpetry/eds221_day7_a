@@ -224,3 +224,79 @@ time_interval <- interval(day_1, day_2)
 
 time_length(time_interval, "year")  #---- asks how many years is in this time interval?
 ```
+
+### Str_detect()
+
+```{r}
+my_string <- "Teddy loves to eat salmon and snacks" 
+
+my_string |> str_detect("love") #gives TRUE as response
+
+my_string <- c("burrito", "fish taco", "taco salad")
+my_string |> 
+  str_detect("fish") #looks through the vector in order and returns false, true, false
+```
+
+use str_detect() in combination with filter() to get all the skywalker characters
+
+```{r}
+skywalkers <- starwars |> 
+  filter(str_detect(name, pattern = "Skywalker"))
+
+#get all the Mauls
+
+mauls <- starwars |> 
+  filter(str_detect(name, pattern = "Maul"))
+
+#make a subset that keeps rows where "blue"shows up in the eye color either alone OR in combiination
+
+blue_eyes <- starwars |> 
+  filter(str_detect(eye_color, pattern = "blue"))
+
+```
+
+### str_replace 
+
+use this to replace string patterns
+
+```{r}
+firewalkers <- starwars |> 
+  mutate(name_2 = str_replace(name, pattern = "Sky", replacement = "Fire"))
+```
+
+```{r}
+feedback <- c("   I  ate  some      nachos    ", "Wednesday   morning")
+
+str_trim(feedback) #gets rid of leading and trailing white space
+str_squish(feedback) #gets rid of interior white space 
+```
+
+str_to... options
+
+```{r}
+str_to_lower(feedback) #everything goes to lowercase 
+str_to_upper(feedback) #uppercase 
+str_to_title(feedback) #first letters capitalized 
+#there are also other ones they are pretty obvious 
+```
+
+create new dataframe called starwars_lc from starwars that adds a new column called name_lower containing all character names converted to lowercase
+
+```{r}
+starwars_lc <- starwars |> 
+  mutate(name_lower = str_to_lower(name))
+  
+```
+
+# case_when() 
+
+i want this code to look through the species columns, and when it matches droid, change to robot, if not then change to non-robot .. basically an if else statement within the mutate and str_detect thing
+
+```{r}
+sw_robot <- starwars |> 
+  mutate(robot_status = case_when(             #---- kind of do the if else within this funct.
+  species == "Droid" ~ "A ROBOT!!",        #----- saying if the species matches droid ~then:
+    species == "Human" ~ "it's a human woah!",    #---- don't need the if and else operators
+    TRUE ~ "this is something else"
+  ))
+```
