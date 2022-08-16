@@ -1,0 +1,2 @@
+"0","#only obs. are retained in x if they do not have a match in y"
+"0","anti_join_ex <- anti_join(animals, sites, by = ""location"")"

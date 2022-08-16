@@ -1,0 +1,2 @@
+"0","full_join_example <- full_join(animals, sites)"
+"2","Joining, by = ""location"""

@@ -4,14 +4,83 @@ format: html
 editor: visual
 ---
 
-# Joins 
+```{r}
+#attach libraries 
+library(datapasta)
+library(tidyverse)
+library(janitor) 
+library(here)
+```
+
+# Mutating Joins 
+
+```{r}
+#---- use data pasta to create a dataframe
+
+animals <- tibble::tribble(
+  ~location,   ~species,  ~maturity,
+   "lagoon",   "bobcat",    "adult",
+    "bluff",   "coyote", "juvenile",
+    "creek",      "fox",    "adult",
+     "oaks", "squirrel", "juvenile",
+    "bluff",   "bobcat",    "adult"
+  )
+
+sites <- tibble::tribble(
+           ~location,      ~full_site_name, ~jurisdiction,
+            "beach",       "Goleta Beach",     "SB City",
+           "lagoon",        "UCSB Lagoon",        "UCSB",
+            "bluff",       "Ellwood Mesa",     "SB City",
+             "oaks", "Fremont Campground",        "USFS"
+           )
+```
 
 ### Full Join 
 
+```{r}
+#if you have multiple matching column names, you can add the argument 'by = '
+
+full_join_example <- full_join(animals, sites)  #-- nothing gets omitted
+
+#automatically found that the matching column was location and joined by location
+
+```
+
 ### Left Join 
+
+```{r}
+left_join_example <- left_join(animals, sites, by = "location")
+```
 
 ### Inner Join
 
+```{r}
+inner_join_example <- inner_join(animals, sites, by = "location")
+
+#change the key name
+
+sites2 <- sites |> 
+  rename((loc = location))
+
+#example of joining when key variables have non-matching names 
+#so the key doesn't have to be matching if you manually specify this 
+
+nonmatching <- full_join(animals, sites2, by = c("location", "loc"))
+```
+
+# Filtering Joins
+
 ### Semi-join 
 
+```{r}
+#filtering joins will not add columns! 
+semi_join_ex <- semi_join(animals, sites, by = "location")
+  
+```
+
 ### Anti-join 
+
+```{r}
+#only obs. are retained in x if they do not have a match in y
+anti_join_ex <- anti_join(animals, sites, by = "location")
+```
