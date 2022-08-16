@@ -11,6 +11,7 @@ library(tidyverse)
 library(janitor) 
 library(here)
 library(palmerpenguins)
+library(lubridate)
 ```
 
 # Mutating Joins 
@@ -127,4 +128,69 @@ penguins_sub2 <- penguins |>
   summarize(mean_flipper = mean(flipper_length_mm), 
             sd_flipper = sd(flipper_length_mm), 
             sample_size_flipper = length(flipper_length_mm))
+```
+
+# Dates with Lubridate 
+
+as long as you know the order of elements in the date stamp, lubridate can convert almost ANY format to the standard ISO date format
+
+```{r}
+my_date <- "03-15-1998"
+#choose between MDY, DMY, YMD
+lubridate::mdy(my_date)
+
+my_date1 <- "11/07/2003" #lets say this is date/month/year so use DMY
+lubridate::dmy(my_date1)
+
+my_date2 <- "08-Jun-1974"
+lubridate::dmy(my_date2)
+
+my_date3 <- "19610518"
+lubridate::ymd(my_date3)
+```
+
+break it! :)
+
+```{r}
+lubridate::mdy("1942-08-30") #this will not work because MDY does not make sense in this format
+
+#instead you would have to use YMD format 
+
+lubridate::dmy("09/22/84") #you would have to use MDY instead 
+```
+
+```{r}
+time <- "2020-08-12 11:18"
+time <- lubridate::ymd_hm(time)
+time
+class(time) #without the time info, this would be class "date" with time info it's "POSIXct" and "POSIXt"
+```
+
+```{r}
+#how to convert between time zones
+with_tz(time, "America/Los_Angeles") #converted this to PDT time zone 
+
+with_tz(time, "Asia/Jakarta")
+
+my_time_q <- lubridate::ymd_hms(time) #what can we pull apart from this? 
+
+#pull specific elements from data format 
+year(my_time_q) 
+hour(my_time_q) 
+minute(my_time_q) 
+second(my_time_q) 
+month(my_time_q) 
+```
+
+```{r}
+teddy_bday <- lubridate::ymd("20170615")
+#what day of the week is this? 
+wday(teddy_bday, label = TRUE)
+
+#what day of the week were you born on? (needs to be stored as class = date)
+my_bday <- lubridate::ymd("19981004")
+wday(my_bday, label = TRUE)
+
+#what week of the year was this?
+week(my_bday) #so I was born the 40th week
 ```
