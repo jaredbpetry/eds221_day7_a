@@ -1,0 +1,14 @@
+---
+title: "Day 7 activities"
+format: html
+editor: visual
+---
+
+```{r}
+library(datapasta)
+library(tidyverse)
+library(janitor) 
+library(here)
+library(palmerpenguins)
+library(lubridate)
+```
