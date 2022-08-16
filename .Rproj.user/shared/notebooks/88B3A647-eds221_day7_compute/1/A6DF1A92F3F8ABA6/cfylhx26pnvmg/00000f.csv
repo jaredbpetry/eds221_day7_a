@@ -1,0 +1,6 @@
+"0","penguins_sub1 <- penguins |> "
+"0","  filter(island %in% c(""Biscoe"", ""Dream"")) |> "
+"0","  select(-year, -sex) |> "
+"0","  mutate(body_mass_kg = body_mass_g / 1000) |> "
+"0","  rename(location = island) #remember to do new name = old name (weird)"
+"0",""

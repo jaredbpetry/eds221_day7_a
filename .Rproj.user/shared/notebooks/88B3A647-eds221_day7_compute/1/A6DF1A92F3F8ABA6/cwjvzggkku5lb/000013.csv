@@ -1,0 +1,7 @@
+"0","penguins_sub2 <- penguins |> "
+"0","  filter(species == ""Adelie"") |> "
+"0","  filter(flipper_length_mm != is.na(flipper_length_mm)) |>  #take out rows where flipper length is NA"
+"0","  group_by(sex) |> "
+"0","  summarize(mean_flipper = mean(flipper_length_mm), "
+"0","            sd_flipper = sd(flipper_length_mm), "
+"0","            sample_size_flipper = length(flipper_length_mm))"

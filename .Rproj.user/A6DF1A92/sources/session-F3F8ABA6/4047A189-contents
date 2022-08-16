@@ -10,6 +10,7 @@ library(datapasta)
 library(tidyverse)
 library(janitor) 
 library(here)
+library(palmerpenguins)
 ```
 
 # Mutating Joins 
@@ -60,12 +61,12 @@ inner_join_example <- inner_join(animals, sites, by = "location")
 #change the key name
 
 sites2 <- sites |> 
-  rename((loc = location))
+  rename(loc = location)
 
 #example of joining when key variables have non-matching names 
 #so the key doesn't have to be matching if you manually specify this 
 
-nonmatching <- full_join(animals, sites2, by = c("location", "loc"))
+nonmatching <- full_join(animals, sites2, by = c("location" = "loc"))
 ```
 
 # Filtering Joins
@@ -83,4 +84,47 @@ semi_join_ex <- semi_join(animals, sites, by = "location")
 ```{r}
 #only obs. are retained in x if they do not have a match in y
 anti_join_ex <- anti_join(animals, sites, by = "location")
+```
+
+# Data Wrangling Refresher 
+
+**Refresher 1:** Starting with the `penguins` dataset in the `palmerpenguins`package, write a single piped sequence in which you:
+
+1.  Only include penguins at Biscoe and Dream islands
+
+2.  Remove the `year` and `sex` variables
+
+3.  Add a new column called `body_mass_kg`, with penguin mass converted from grams to kilograms
+
+4.  Rename the `island` variable to `location`
+
+```{r}
+penguins_sub1 <- penguins |> 
+  filter(island %in% c("Biscoe", "Dream")) |> 
+  select(-year, -sex) |> 
+  mutate(body_mass_kg = body_mass_g / 1000) |> 
+  rename(location = island) #remember to do new name = old name (weird)
+
+```
+
+**Refresher 2:** Staring with the `penguins` dataset in the `palmerpenguins`package, write a single piped sequence in which you:
+
+1.  Limit to only Adelie penguins
+
+2.  Remove any observations where `flipper_length_mm` is `NA` (hint: `!is.na()`)
+
+3.  Group the data by `sex`
+
+4.  Find the mean (`mean()`), standard deviation (`sd`) and sample size (`n`) of flipper_length_mm for male and female Adelie penguins, returned in a nice summary table
+
+\
+
+```{r}
+penguins_sub2 <- penguins |> 
+  filter(species == "Adelie") |> 
+  filter(!is.na(flipper_length_mm)) |>  #take out rows where flipper length is NA
+  group_by(sex) |> 
+  summarize(mean_flipper = mean(flipper_length_mm), 
+            sd_flipper = sd(flipper_length_mm), 
+            sample_size_flipper = length(flipper_length_mm))
 ```
