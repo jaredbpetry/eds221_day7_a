@@ -1,0 +1,17 @@
+---
+title: "Joins and strings"
+format: html
+editor: visual
+---
+
+# Joins 
+
+### Full Join 
+
+### Left Join 
+
+### Inner Join
+
+### Semi-join 
+
+### Anti-join 

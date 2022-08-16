@@ -1,0 +1,32 @@
+{
+    "id": "4047A189",
+    "path": "~/Documents/MEDS/eds221/eds221_day7_a/eds221_day7_compute.qmd",
+    "project_path": "eds221_day7_compute.qmd",
+    "type": "quarto_markdown",
+    "hash": "1607800580",
+    "contents": "",
+    "dirty": false,
+    "created": 1660669547723.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "rmdVisualMode": "true",
+        "rmdVisualWrapConfigured": "true",
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "17,0",
+        "scrollLine": "0",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "132:0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1660669661,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1660669661817,
+    "read_only": false,
+    "read_only_alternatives": []
+}
