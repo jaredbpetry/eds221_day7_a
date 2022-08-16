@@ -4,14 +4,209 @@ format: html
 editor: visual
 ---
 
-# Joins 
+```{r}
+#attach libraries 
+library(datapasta)
+library(tidyverse)
+library(janitor) 
+library(here)
+library(palmerpenguins)
+library(lubridate)
+```
+
+# Mutating Joins 
+
+```{r}
+#---- use data pasta to create a dataframe
+
+animals <- tibble::tribble(
+  ~location,   ~species,  ~maturity,
+   "lagoon",   "bobcat",    "adult",
+    "bluff",   "coyote", "juvenile",
+    "creek",      "fox",    "adult",
+     "oaks", "squirrel", "juvenile",
+    "bluff",   "bobcat",    "adult"
+  )
+
+sites <- tibble::tribble(
+           ~location,      ~full_site_name, ~jurisdiction,
+            "beach",       "Goleta Beach",     "SB City",
+           "lagoon",        "UCSB Lagoon",        "UCSB",
+            "bluff",       "Ellwood Mesa",     "SB City",
+             "oaks", "Fremont Campground",        "USFS"
+           )
+```
 
 ### Full Join 
 
+```{r}
+#if you have multiple matching column names, you can add the argument 'by = '
+
+full_join_example <- full_join(animals, sites)  #-- nothing gets omitted
+
+#automatically found that the matching column was location and joined by location
+
+```
+
 ### Left Join 
+
+```{r}
+left_join_example <- left_join(animals, sites, by = "location")
+```
 
 ### Inner Join
 
+```{r}
+inner_join_example <- inner_join(animals, sites, by = "location")
+
+#change the key name
+
+sites2 <- sites |> 
+  rename(loc = location)
+
+#example of joining when key variables have non-matching names 
+#so the key doesn't have to be matching if you manually specify this 
+
+nonmatching <- full_join(animals, sites2, by = c("location" = "loc"))
+```
+
+# Filtering Joins
+
 ### Semi-join 
 
+```{r}
+#filtering joins will not add columns! 
+semi_join_ex <- semi_join(animals, sites, by = "location")
+  
+```
+
 ### Anti-join 
+
+```{r}
+#only obs. are retained in x if they do not have a match in y
+anti_join_ex <- anti_join(animals, sites, by = "location")
+```
+
+# Data Wrangling Refresher 
+
+**Refresher 1:** Starting with the `penguins` dataset in the `palmerpenguins`package, write a single piped sequence in which you:
+
+1.  Only include penguins at Biscoe and Dream islands
+
+2.  Remove the `year` and `sex` variables
+
+3.  Add a new column called `body_mass_kg`, with penguin mass converted from grams to kilograms
+
+4.  Rename the `island` variable to `location`
+
+```{r}
+penguins_sub1 <- penguins |> 
+  filter(island %in% c("Biscoe", "Dream")) |> 
+  select(-year, -sex) |> 
+  mutate(body_mass_kg = body_mass_g / 1000) |> 
+  rename(location = island) #remember to do new name = old name (weird)
+
+```
+
+**Refresher 2:** Staring with the `penguins` dataset in the `palmerpenguins`package, write a single piped sequence in which you:
+
+1.  Limit to only Adelie penguins
+
+2.  Remove any observations where `flipper_length_mm` is `NA` (hint: `!is.na()`)
+
+3.  Group the data by `sex`
+
+4.  Find the mean (`mean()`), standard deviation (`sd`) and sample size (`n`) of flipper_length_mm for male and female Adelie penguins, returned in a nice summary table
+
+\
+
+```{r}
+penguins_sub2 <- penguins |> 
+  filter(species == "Adelie") |> 
+  filter(!is.na(flipper_length_mm)) |>  #take out rows where flipper length is NA
+  group_by(sex) |> 
+  summarize(mean_flipper = mean(flipper_length_mm), 
+            sd_flipper = sd(flipper_length_mm), 
+            sample_size_flipper = length(flipper_length_mm))
+```
+
+# Dates with Lubridate 
+
+as long as you know the order of elements in the date stamp, lubridate can convert almost ANY format to the standard ISO date format
+
+```{r}
+my_date <- "03-15-1998"
+#choose between MDY, DMY, YMD
+lubridate::mdy(my_date)
+
+my_date1 <- "11/07/2003" #lets say this is date/month/year so use DMY
+lubridate::dmy(my_date1)
+
+my_date2 <- "08-Jun-1974"
+lubridate::dmy(my_date2)
+
+my_date3 <- "19610518"
+lubridate::ymd(my_date3)
+```
+
+break it! :)
+
+```{r}
+lubridate::mdy("1942-08-30") #this will not work because MDY does not make sense in this format
+
+#instead you would have to use YMD format 
+
+lubridate::dmy("09/22/84") #you would have to use MDY instead 
+```
+
+```{r}
+time <- "2020-08-12 11:18"
+time <- lubridate::ymd_hm(time)
+time
+class(time) #without the time info, this would be class "date" with time info it's "POSIXct" and "POSIXt"
+```
+
+```{r}
+#how to convert between time zones
+with_tz(time, "America/Los_Angeles") #converted this to PDT time zone 
+
+with_tz(time, "Asia/Jakarta")
+
+my_time_q <- lubridate::ymd_hms(time) #what can we pull apart from this? 
+
+#pull specific elements from data format 
+year(my_time_q) 
+hour(my_time_q) 
+minute(my_time_q) 
+second(my_time_q) 
+month(my_time_q) 
+```
+
+```{r}
+teddy_bday <- lubridate::ymd("20170615")
+#what day of the week is this? 
+wday(teddy_bday, label = TRUE)
+
+#what day of the week were you born on? (needs to be stored as class = date)
+my_bday <- lubridate::ymd("19981004")
+wday(my_bday, label = TRUE)
+
+#what week of the year was this?
+week(my_bday) #so I was born the 40th week
+```
+
+```{r}
+urchin_counts <- tribble(
+  ~date, ~species, ~size_mm, 
+  "10/3/2020", "purple", 55, 
+  "10/4/2020", "red", 48, 
+  "11/17/2020", "red", 67
+)
+
+#the date is stored automatically as a character 
+
+urchin_ymd <- urchin_counts |> 
+  mutate(date = mdy(date)) # --- convert from a string to a date so we can use lubridate functions
+
+
+```
