@@ -81,5 +81,5 @@ bird_observations <- rename(.data = bird_observations, bird_obs_notes = notes)
 
 ```{r}
 bird_observations_2 <- bird_observations |> 
-  left_join(bird_observations, taxalist, by = "species_id")
+  left_join(taxalist, by = "species_id")
 ```

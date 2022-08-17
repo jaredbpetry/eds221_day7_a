@@ -1,0 +1,48 @@
+---
+title: "string practice"
+author: "Jared Petry"
+date: "2022-08-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(datapasta)
+library(tidyverse)
+library(janitor) 
+library(here)
+library(palmerpenguins)
+library(lubridate)
+library(here)
+```
+
+```{r}
+alarm_report <- tibble::tribble(
+         ~date,           ~building,                                              ~alarm_message,
+  "2020-03-14", "Engineering-North", "10:02am – HVAC system down, facilities management alerted",
+  "2020-03-15",         "Bren Hall",                    "8:24am – Elevator North out of service",
+  "2020-04-10", "Engineering-South",     "12:41am – Fire alarm, UCSB fire responded and cleared",
+  "2020-04-18",        "Engr-North",     "9:58pm – Campus point emergency siren, UCPD responded"
+  )
+
+```
+
+Practice working with strings by writing code to update alarm_report as follows (these can be separate, or all as part of a piped sequence):
+
+Replace the “Engr” with “Engineering” in the building column
+Separate the building column into two separate columns, building and wing, separated at the dash
+Only keep observations with the word “responded” in the alarm_message column
+Separate the message time from the rest of the message by separating at --
+Convert the date column to a Date class using lubridate
+
+```{r}
+new_alarm_report <- alarm_report |> 
+  mutate(building = str_replace(building, pattern = "Engr", replacement = "Engineering")) + 
+  separate("building", c('building', 'wing'), sep = "—")
+  
+
+```
+
