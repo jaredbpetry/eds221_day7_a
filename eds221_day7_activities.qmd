@@ -79,7 +79,24 @@ bird_observations <- rename(.data = bird_observations, bird_obs_notes = notes)
 
 -   Then, create a subset that contains *all observations* in the `birds` dataset, joins the taxonomic, site and survey information to it, and is finally limited to only columns `survey_date`, `common_name`, `park_name`, and `bird_count`. You can decide the order that you want to create this in (e.g. limit the columns first, then join, or the other way around).
 
+-   Use `lubridate::month()` to add a new column called `survey_month`, containing only the month number. Then, convert the month number to a factor (again within `mutate()`)
+
+-   Learn a new function on your own! Use `dplyr::relocate()` to move the new `survey_month` column to immediately after the `survey_date`column. You can do this in a separate code chunk, or pipe straight into it from your existing code.
+
+-   Find the total number of birds observed by *park* and *month* (i.e., you\'ll `group_by(park_name, survey_month)`)
+
+-   Filter to only include parks \"Lindo\", \"Orme\", \"Palomino\" and \"Sonrisa\"
+
 ```{r}
-bird_observations_2 <- bird_observations |> 
-  left_join(taxalist, by = "species_id")
+bird_observations_2 <- left_join(bird_observations, 
+                                 taxalist, by = "species_id") |> left_join(sites, by = "site_id") |> 
+  left_join(surveys, by = "survey_id") |> 
+  select(survey_date, common_name, park_name, bird_count) |> 
+  mutate(survey_month = lubridate::month(survey_date)) |> 
+  mutate(survey_month = as.factor(survey_month)) |> 
+  dplyr::relocate(survey_month, .after = survey_date) |> 
+  filter(park_name == c("Lindo", "Orme", "Palomino", "Sonrisa")) |> 
+  group_by(park_name, survey_month) |> 
+  summarise(total_birds = sum(bird_count, na.rm = TRUE))  
+  
 ```
